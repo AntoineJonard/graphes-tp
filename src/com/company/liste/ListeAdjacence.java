@@ -29,18 +29,21 @@ public class ListeAdjacence {
         this.listeAdjacence.get(s2).add(s1Id);
     }
 
-    public void removeArrete(Sommet s1, Sommet s2){
-        this.listeAdjacence.get(s1).remove(s2);
-        this.listeAdjacence.get(s2).remove(s1);
+    public void removeArrete(int s1Id, int s2Id){
+        Sommet s1 = new Sommet(s1Id);
+        Sommet s2 = new Sommet(s2Id);
+        this.listeAdjacence.get(s1).remove(s1Id);
+        this.listeAdjacence.get(s2).remove(s2Id);
     }
 
-    public void removeSommet(Sommet s){
+    public void removeSommet(int sId){
+        Sommet s = new Sommet(sId);
         this.listeAdjacence.remove(s);
         for (Map.Entry entry : this.listeAdjacence.entrySet()){
-            ArrayList<Sommet> sommets = ((ArrayList<Sommet>)entry.getValue());
-            for (int i = 0 ; i < sommets.size() ; i++){
-                if (sommets.get(i).equals(s)){
-                    sommets.remove(sommets.get(i));
+            ArrayList<Integer> sommetsIds = ((ArrayList<Integer>)entry.getValue());
+            for (int i = 0 ; i < sommetsIds.size() ; i++){
+                if (sommetsIds.get(i).equals(sId)){
+                    sommetsIds.remove(sommetsIds.get(i));
                 }
             }
         }
@@ -49,8 +52,14 @@ public class ListeAdjacence {
     public static void main(String[] args) {
         ListeAdjacence listeAdjacence = new ListeAdjacence();
 
-        listeAdjacence.addSommet(new Sommet("1"));
-        listeAdjacence.addSommet(new Sommet("2"));
+        Sommet s1 = new Sommet("1");
+        Sommet s2 = new Sommet("2");
 
+        listeAdjacence.addSommet(s1);
+        listeAdjacence.addSommet(s2);
+
+        listeAdjacence.addArrete(s1.getId(), s2.getId());
+
+        System.out.print(listeAdjacence);
     }
 }
