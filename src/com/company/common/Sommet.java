@@ -51,4 +51,8 @@ public class Sommet {
         return id == sommet.id;
     }
 
+    @Override
+    public String toString() {
+        return "id = "+id;
+    }
 }
