@@ -40,6 +40,36 @@ public class ListeAdjacence {
             String[] arrete = line.split("\\s+");
             addArrete(Integer.parseInt(arrete[0]),Integer.parseInt(arrete[1]));
         }
+        System.out.println("Réussite de la création du graphe");
+    }
+
+    /**
+     * Le fichier se trouvera dans le réperoite src/data du projet
+     * @param fileName nom du fichier qui sera créer;
+     */
+    public void save(String fileName) throws IOException {
+
+        File file = new File("src/data/"+fileName);
+        if (file.createNewFile()){
+            System.out.println("Ficher créer");
+        }else{
+            System.out.println("Fichier deja existant, écrasement...");
+        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+        bufferedWriter.write(listeAdjacence.size()+"\n");
+
+        for (Sommet s : listeAdjacence.keySet()){
+            bufferedWriter.write(s.getId()+" "+s.getName()+"\n");
+        }
+        for (Map.Entry<Sommet, List<Integer>> sa : listeAdjacence.entrySet()){
+            for (Integer extremite : sa.getValue()){
+                bufferedWriter.write(sa.getKey().getId()+" "+extremite+"\n");
+            }
+        }
+
+        bufferedWriter.close();
+
+        System.out.println("Fichier correctement sauvegardé");
     }
 
     public void addSommet(Sommet s){
@@ -93,10 +123,10 @@ public class ListeAdjacence {
         listeAdjacence.addArrete(s1.getId(), s2.getId());
         //listeAdjacence.removeArrete(s1.getId(), s2.getId());
 
-        System.out.print(listeAdjacence.isVoisin(s1.getId(), s2.getId()));
+        System.out.println("1 et 2 sont voisins ? "+listeAdjacence.isVoisin(s1.getId(), s2.getId()));
 
         ListeAdjacence listeAdjacenceFromFile = new ListeAdjacence("graphe.txt");
+        listeAdjacenceFromFile.save("graphe2.txt");
 
-        System.out.print(listeAdjacenceFromFile.isVoisin(4, 5));
     }
 }
