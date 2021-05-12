@@ -13,6 +13,11 @@ public class Sommet {
         this.name = name;
     }
 
+    public Sommet(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Sommet(int id) {
         this.id = id;
     }
