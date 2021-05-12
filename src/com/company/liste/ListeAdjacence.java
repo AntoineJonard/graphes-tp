@@ -9,19 +9,24 @@ import java.util.Map;
 
 public class ListeAdjacence {
 
-    private final HashMap<Sommet, List<Sommet>> listeAdjacence;
+    private final HashMap<Sommet, List<Integer>> listeAdjacence;
 
     public ListeAdjacence() {
         this.listeAdjacence = new HashMap<>();
     }
 
     public void addSommet(Sommet s){
-        this.listeAdjacence.put(s,new ArrayList<>());
+        if (!this.listeAdjacence.containsKey(s))
+            this.listeAdjacence.put(s,new ArrayList<>());
+        else
+            System.out.println("Sommet déjà existant");
     }
 
-    public void addArrete(Sommet s1, Sommet s2){
-        this.listeAdjacence.get(s1).add(s2);
-        this.listeAdjacence.get(s2).add(s1);
+    public void addArrete(int s1Id, int s2Id){
+        Sommet s1 = new Sommet(s1Id);
+        Sommet s2 = new Sommet(s2Id);
+        this.listeAdjacence.get(s1).add(s2Id);
+        this.listeAdjacence.get(s2).add(s1Id);
     }
 
     public void removeArrete(Sommet s1, Sommet s2){
@@ -45,5 +50,7 @@ public class ListeAdjacence {
         ListeAdjacence listeAdjacence = new ListeAdjacence();
 
         listeAdjacence.addSommet(new Sommet("1"));
+        listeAdjacence.addSommet(new Sommet("2"));
+
     }
 }

@@ -13,6 +13,10 @@ public class Sommet {
         this.name = name;
     }
 
+    public Sommet(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -34,7 +38,7 @@ public class Sommet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sommet sommet = (Sommet) o;
-        return id == sommet.id && Objects.equals(name, sommet.name);
+        return id == sommet.id;
     }
 
 }
