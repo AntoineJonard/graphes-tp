@@ -117,6 +117,8 @@ public class ListeAdjacence {
 
     public boolean isVoisin(Integer s1Id, Integer s2Id){
         Sommet s1 = new Sommet(s1Id);
+        if (listeAdjacence.get(s1)==null)
+            return false;
         return listeAdjacence.get(s1).contains(s2Id);
     }
 
@@ -164,8 +166,48 @@ public class ListeAdjacence {
     }
 
     public boolean estPartielDe(ListeAdjacence g2){
-        return false;
+        return sommetsInclusDans(g2,false) && arretesInclusesDans(g2);
     }
+
+    public boolean estSousGrapheDe(ListeAdjacence g2){
+        return sommetsInclusDans(g2,true) && arretesInclusesDans(g2);
+    }
+
+    public boolean estSousGraphePartielDe(ListeAdjacence g2){
+        Set<Sommet> mySommets = listeAdjacence.keySet();
+        Set<Sommet> otherSommets = g2.listeAdjacence.keySet();
+        Set<String> mySommetsNames = mySommets.stream().map(Sommet::getName).collect(Collectors.toSet());
+        Set<String> othersSommetsNames = otherSommets.stream().map(Sommet::getName).collect(Collectors.toSet());
+        return arretesInclusesDans(g2) && othersSommetsNames.containsAll(mySommetsNames) && mySommetsNames.containsAll(othersSommetsNames);
+    }
+
+    public boolean estCliqueDe(ListeAdjacence g2){
+        if (!estSousGrapheDe(g2))
+            return false;
+
+        int nbArrete = 0;
+        int nbSommets = listeAdjacence.size();
+        for(Map.Entry<Sommet,List<Integer>> entry : listeAdjacence.entrySet()){
+            nbArrete += entry.getValue().size();
+        }
+        nbArrete /= 2;
+
+        return (nbSommets*(nbSommets-1))/2 == nbArrete;
+    }
+
+    public boolean estStableDe(ListeAdjacence g2){
+        if (!sommetsInclusDans(g2,false))
+            return false;
+
+        for(Map.Entry<Sommet,List<Integer>> entry : g2.listeAdjacence.entrySet()){
+            for (Integer id : entry.getValue())
+                if (isVoisin(entry.getKey().getId(),id))
+                    return false;
+        }
+        return true;
+    }
+
+
 
     public static void main(String[] args) throws IOException {
 //        ListeAdjacence listeAdjacence = new ListeAdjacence();
