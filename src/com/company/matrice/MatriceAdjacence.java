@@ -8,10 +8,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MatriceAdjacence {
-    ArrayList<ArrayList<Integer>> matrice;
-    ArrayList<Sommet> association;
+    List<ArrayList<Integer>> matrice;
+    ArrayList<Sommet> sommetsList;
 
     public MatriceAdjacence(){
         graphe_vide();
@@ -39,20 +41,21 @@ public class MatriceAdjacence {
         }
     }
 
+    /** Initialise le graphe */
     public void graphe_vide(){
         matrice = new ArrayList<>();
-        association = new ArrayList<>();
+        sommetsList = new ArrayList<>();
     }
 
+    /** On ajoute s à la liste des association. s est alors lié à son indice.
+    Si la matrice est vide, on ajoute une nouvelle ligne que l'on initialise à 0. */
     public void add_sommet(Sommet s){
-        //On ajoute s à la liste des association. s est alors lié à son indice.
-        //Si la matrice est vide, on ajoute une nouvelle ligne que l'on initialise à 0.
         if(matrice.isEmpty()){
-            association.add(s);
+            sommetsList.add(s);
             matrice.add(new ArrayList<Integer>());
             matrice.get(0).add(0);
-        } else if(!association.contains(s)){
-            association.add(s);
+        } else if(!sommetsList.contains(s)){
+            sommetsList.add(s);
             matrice.forEach(l -> l.add(0));
             matrice.add(new ArrayList<Integer>());
             for(int i = 0; i < matrice.get(0).size(); i++){
@@ -65,8 +68,8 @@ public class MatriceAdjacence {
 
     public void add_arrete(Sommet i, Sommet j){
         //On recupere les indices des sommets i et j
-        int indiceI = association.indexOf(i);
-        int indiceJ = association.indexOf(j);
+        int indiceI = sommetsList.indexOf(i);
+        int indiceJ = sommetsList.indexOf(j);
 
         matrice.get(indiceI).set(indiceJ, 1);
         matrice.get(indiceJ).set(indiceI, 1);
@@ -76,9 +79,9 @@ public class MatriceAdjacence {
         int indiceI = -1;
         int indiceJ = -1;
 
-        for(int k = 0; k < association.size(); k++) {
-            if(association.get(k).getId() == i) indiceI = k;
-            else if(association.get(k).getId() == j) indiceJ = k;
+        for(int k = 0; k < sommetsList.size(); k++) {
+            if(sommetsList.get(k).getId() == i) indiceI = k;
+            else if(sommetsList.get(k).getId() == j) indiceJ = k;
         }
 
         matrice.get(indiceI).set(indiceJ, 1);
@@ -86,16 +89,17 @@ public class MatriceAdjacence {
     }
 
     public void supp(Sommet i, Sommet j){
-        int indiceI = association.indexOf(i);
-        int indiceJ = association.indexOf(j);
+        int indiceI = sommetsList.indexOf(i);
+        int indiceJ = sommetsList.indexOf(j);
 
         matrice.get(indiceI).set(indiceJ, 0);
         matrice.get(indiceJ).set(indiceI, 0);
     }
 
+    /**On verifie pour chaque sommet s'il est voisin du sommet actuel */
     public int est_voisin(Sommet i, Sommet j){
-        int indiceI = association.indexOf(i);
-        int indiceJ = association.indexOf(j);
+        int indiceI = sommetsList.indexOf(i);
+        int indiceJ = sommetsList.indexOf(j);
 
         ArrayList<Integer> ligne = matrice.get(indiceI);
         for(int k = 0; k < ligne.size(); k++){
@@ -107,16 +111,69 @@ public class MatriceAdjacence {
         return 0;
     }
 
+    /** On ajoute que la matrice triangulaire inferieur */
     public ListeAdjacence toListe(){
         ListeAdjacence listeAdjacence = new ListeAdjacence();
-
         for(int i = 0; i < matrice.size(); i++){
-            listeAdjacence.addSommet(association.get(i));
+            listeAdjacence.addSommet(sommetsList.get(i));
             for(int j = 0; j < i; j++){
                 if(matrice.get(i).get(j) == 1) listeAdjacence.addArrete(i, j);
             }
         }
         return listeAdjacence;
+    }
+
+    /** Renvoie true si les sommets du graphe actuel sont inclus dans le graphe passe en parametres, faux sinon*/
+    public boolean inclus_sommet(MatriceAdjacence G, boolean strict){
+        /** On recupere les noms des sommets actuels*/
+        List<String> nomSommets = sommetsList.stream().map(Sommet::getName).collect(Collectors.toList());
+        /** On recupere les noms des sommets du graphe passes en parametres*/
+        List<String> nomSommetsAutre = G.sommetsList.stream().map(Sommet::getName).collect(Collectors.toList());
+
+        /** Si strict alors renvoie true si G inclus dans G' et G' pas inclus dans G*/
+        if (strict) return nomSommetsAutre.containsAll(nomSommets) && !nomSommets.containsAll(nomSommetsAutre);
+        /** Renvoie true si G inclus G', peut renvoyer true si G = G'*/
+        return nomSommetsAutre.containsAll(nomSommets);
+    }
+
+    /** On verifie si le premier graphe est inclus dans G, ensuite on compte les arretes de G et
+     * on verifie si nbArcs < nbArcsG
+     * */
+    public boolean inclus_aretes(MatriceAdjacence G){
+        int nbArcs = 0;
+        int nbArcsG = 0;
+
+
+        //Recuperer les deux noms pour chaque arrete
+        for(int i = 1; i < matrice.size(); i++){
+            for(int j = 0; j < i; j++){
+                int id1 = -1;
+                int id2 = -1;
+                if(matrice.get(i).get(j) == 1){
+                    nbArcs++;
+                    String name1 = sommetsList.get(i).getName();
+                    String name2 = sommetsList.get(j).getName();
+
+                    //Trouver les id des sommmets qui ont ces noms dans le graphe G
+                    for (int k = 0; k < G.sommetsList.size(); k++) {
+                        if(G.sommetsList.get(k).getName().equals(name1)) {id1 = k;}
+                        else if(G.sommetsList.get(k).getName().equals(name2)) {id2 = k;}
+                    }
+                    if(id1 == -1 || id2 == -1) return false;
+
+                    //On s'arrete si l'arrete n'est pas presente
+                    if(G.matrice.get(id1).get(id2) != 1 || G.matrice.get(id2).get(id1) != 1 ) {  return false;}
+                }
+            }
+        }
+
+        //On verifie si nbArcs < NbArcsG
+        for(int i = 1; i < G.matrice.size(); i++){
+            for(int j = 0; j < i; j++){
+                if(G.matrice.get(i).get(j) == 1) nbArcsG++;
+            }
+        }
+        return nbArcs < nbArcsG;
     }
 
     public void afficher() {
@@ -130,15 +187,9 @@ public class MatriceAdjacence {
 
     public static void main(String[] args) throws IOException {
         MatriceAdjacence m = new MatriceAdjacence("graphe.txt");
-        Sommet s1 = new Sommet("1");
-        Sommet s2 = new Sommet("2");
-
-        m.add_sommet(s1);
-        m.add_sommet(s2);
-        m.add_arrete(s1, s2);
-
-        m.afficher();
-        ListeAdjacence l = m.toListe();
+        MatriceAdjacence G = new MatriceAdjacence("graphe2.txt");
+        System.out.println(m.inclus_aretes(G));
+        //m.afficher();
 
 
     }

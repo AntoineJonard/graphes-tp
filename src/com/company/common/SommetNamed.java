@@ -1,7 +1,7 @@
 package com.company.common;
 
 import java.util.Objects;
-
+/* Classe pour pouvoir comparer les sommets sur leurs noms*/
 public class SommetNamed {
 
     private int id;
