@@ -1,6 +1,7 @@
 package com.company.liste;
 
 import com.company.common.Sommet;
+import com.company.common.SommetNamed;
 import com.company.matrice.MatriceAdjacence;
 
 import java.io.*;
@@ -105,6 +106,15 @@ public class ListeAdjacence {
         }
     }
 
+    public Sommet getSommetById(Integer id){
+        for (Sommet s : listeAdjacence.keySet()){
+            if (s.getId() == id){
+                return  s;
+            }
+        }
+        return null;
+    }
+
     public boolean isVoisin(Integer s1Id, Integer s2Id){
         Sommet s1 = new Sommet(s1Id);
         return listeAdjacence.get(s1).contains(s2Id);
@@ -139,14 +149,22 @@ public class ListeAdjacence {
 
     public boolean arretesInclusesDans(ListeAdjacence g2){
         boolean stillTotallIncluded = true;
+
         for(Map.Entry<Sommet,List<Integer>> entry1 : listeAdjacence.entrySet()){
             for(Map.Entry<Sommet,List<Integer>> entry2 : g2.listeAdjacence.entrySet()){
                 if (entry1.getKey().sameName(entry1.getKey())){
-
+                    Set<String> sommets1 = entry1.getValue().stream().map(sommetId->getSommetById(sommetId).getName()).collect(Collectors.toSet());
+                    Set<String> sommets2 = entry2.getValue().stream().map(sommetId->g2.getSommetById(sommetId).getName()).collect(Collectors.toSet());
+                    if (!sommets2.containsAll(sommets1)) return false;
+                    if (!sommets1.containsAll(sommets2)) stillTotallIncluded = false;
                 }
             }
         }
-        return true;
+        return !stillTotallIncluded;
+    }
+
+    public boolean estPartielDe(ListeAdjacence g2){
+        return false;
     }
 
     public static void main(String[] args) throws IOException {
