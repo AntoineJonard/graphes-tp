@@ -51,6 +51,14 @@ public class Sommet {
         return id == sommet.id;
     }
 
+    public boolean sameName(Sommet s){
+        return this.getName().equals(s.getName());
+    }
+
+    public SommetNamed toSommetNamed(){
+        return new SommetNamed(getId(),getName());
+    }
+
     @Override
     public String toString() {
         return "id = "+id;

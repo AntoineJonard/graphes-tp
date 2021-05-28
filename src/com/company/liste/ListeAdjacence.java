@@ -4,10 +4,8 @@ import com.company.common.Sommet;
 import com.company.matrice.MatriceAdjacence;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ListeAdjacence {
 
@@ -129,23 +127,49 @@ public class ListeAdjacence {
         return matriceAdjacence;
     }
 
+    public boolean sommetsInclusDans(ListeAdjacence g2, boolean stricte){
+        Set<Sommet> mySommets = listeAdjacence.keySet();
+        Set<Sommet> otherSommets = g2.listeAdjacence.keySet();
+        Set<String> mySommetsNames = mySommets.stream().map(Sommet::getName).collect(Collectors.toSet());
+        Set<String> othersSommetsNames = otherSommets.stream().map(Sommet::getName).collect(Collectors.toSet());
+        if (stricte)
+            return othersSommetsNames.containsAll(mySommetsNames) && !mySommetsNames.containsAll(othersSommetsNames);
+        return othersSommetsNames.containsAll(mySommetsNames);
+    }
+
+    public boolean arretesInclusesDans(ListeAdjacence g2){
+        boolean stillTotallIncluded = true;
+        for(Map.Entry<Sommet,List<Integer>> entry1 : listeAdjacence.entrySet()){
+            for(Map.Entry<Sommet,List<Integer>> entry2 : g2.listeAdjacence.entrySet()){
+                if (entry1.getKey().sameName(entry1.getKey())){
+
+                }
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) throws IOException {
-        ListeAdjacence listeAdjacence = new ListeAdjacence();
+//        ListeAdjacence listeAdjacence = new ListeAdjacence();
+//
+//        Sommet s1 = new Sommet("1");
+//        Sommet s2 = new Sommet("2");
+//
+//        listeAdjacence.addSommet(s1);
+//        listeAdjacence.addSommet(s2);
+//
+//        listeAdjacence.addArrete(s1.getId(), s2.getId());
+//        //listeAdjacence.removeArrete(s1.getId(), s2.getId());
+//
+//        System.out.println("1 et 2 sont voisins ? "+listeAdjacence.isVoisin(s1.getId(), s2.getId()));
+//
+//        ListeAdjacence listeAdjacenceFromFile = new ListeAdjacence("graphe.txt");
+//        MatriceAdjacence ma = listeAdjacenceFromFile.toMatrice();
+//        System.out.println(ma);
 
-        Sommet s1 = new Sommet("1");
-        Sommet s2 = new Sommet("2");
-
-        listeAdjacence.addSommet(s1);
-        listeAdjacence.addSommet(s2);
-
-        listeAdjacence.addArrete(s1.getId(), s2.getId());
-        //listeAdjacence.removeArrete(s1.getId(), s2.getId());
-
-        System.out.println("1 et 2 sont voisins ? "+listeAdjacence.isVoisin(s1.getId(), s2.getId()));
-
-        ListeAdjacence listeAdjacenceFromFile = new ListeAdjacence("graphe.txt");
-        MatriceAdjacence ma = listeAdjacenceFromFile.toMatrice();
-        System.out.println(ma);
+        ListeAdjacence listeAdjacence1 = new ListeAdjacence("graphe.txt");
+        ListeAdjacence listeAdjacence2 = new ListeAdjacence("graphe.txt");
+        System.out.println(listeAdjacence2.sommetsInclusDans(listeAdjacence1,false));
 
     }
 }
