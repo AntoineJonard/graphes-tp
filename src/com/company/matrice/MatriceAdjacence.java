@@ -1,6 +1,7 @@
 package com.company.matrice;
 
 import com.company.common.Sommet;
+import com.company.liste.ListeAdjacence;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +18,7 @@ public class MatriceAdjacence {
     }
 
     public MatriceAdjacence(String fileName) throws IOException {
+        graphe_vide();
         File file = new File("src/data/"+fileName);
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -105,9 +107,21 @@ public class MatriceAdjacence {
         return 0;
     }
 
-    public void afficher(){
+    public ListeAdjacence toListe(){
+        ListeAdjacence listeAdjacence = new ListeAdjacence();
+
         for(int i = 0; i < matrice.size(); i++){
-            for(int j = 0; j < matrice.get(i).size(); j++){
+            listeAdjacence.addSommet(association.get(i));
+            for(int j = 0; j < i; j++){
+                if(matrice.get(i).get(j) == 1) listeAdjacence.addArrete(i, j);
+            }
+        }
+        return listeAdjacence;
+    }
+
+    public void afficher() {
+        for (int i = 1; i < matrice.size(); i++) {
+            for (int j = 0; j < matrice.get(i).size(); j++) {
                 System.out.print(matrice.get(i).get(j));
             }
             System.out.println();
@@ -115,7 +129,17 @@ public class MatriceAdjacence {
     }
 
     public static void main(String[] args) throws IOException {
-        MatriceAdjacence m = new MatriceAdjacence("../../data/graphe.txt");
+        MatriceAdjacence m = new MatriceAdjacence("graphe.txt");
+        Sommet s1 = new Sommet("1");
+        Sommet s2 = new Sommet("2");
+
+        m.add_sommet(s1);
+        m.add_sommet(s2);
+        m.add_arrete(s1, s2);
+
         m.afficher();
+        ListeAdjacence l = m.toListe();
+
+
     }
 }
