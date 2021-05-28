@@ -37,12 +37,12 @@ public class MatriceAdjacence {
         }
     }
 
-        private void graphe_vide(){
+    public void graphe_vide(){
         matrice = new ArrayList<>();
         association = new ArrayList<>();
     }
 
-    private void add_sommet(Sommet s){
+    public void add_sommet(Sommet s){
         //On ajoute s à la liste des association. s est alors lié à son indice.
         //Si la matrice est vide, on ajoute une nouvelle ligne que l'on initialise à 0.
         if(matrice.isEmpty()){
@@ -61,7 +61,7 @@ public class MatriceAdjacence {
         }
     }
 
-    private void add_arrete(Sommet i, Sommet j){
+    public void add_arrete(Sommet i, Sommet j){
         //On recupere les indices des sommets i et j
         int indiceI = association.indexOf(i);
         int indiceJ = association.indexOf(j);
@@ -70,7 +70,7 @@ public class MatriceAdjacence {
         matrice.get(indiceJ).set(indiceI, 1);
     }
 
-    private void add_arrete(Integer i, Integer j){
+    public void add_arrete(Integer i, Integer j){
         int indiceI = -1;
         int indiceJ = -1;
 
@@ -83,7 +83,7 @@ public class MatriceAdjacence {
         matrice.get(indiceJ).set(indiceI, 1);
     }
 
-    private void supp(Sommet i, Sommet j){
+    public void supp(Sommet i, Sommet j){
         int indiceI = association.indexOf(i);
         int indiceJ = association.indexOf(j);
 
@@ -91,7 +91,7 @@ public class MatriceAdjacence {
         matrice.get(indiceJ).set(indiceI, 0);
     }
 
-    private int est_voisin(Sommet i, Sommet j){
+    public int est_voisin(Sommet i, Sommet j){
         int indiceI = association.indexOf(i);
         int indiceJ = association.indexOf(j);
 
@@ -105,7 +105,7 @@ public class MatriceAdjacence {
         return 0;
     }
 
-    private void afficher(){
+    public void afficher(){
         for(int i = 0; i < matrice.size(); i++){
             for(int j = 0; j < matrice.get(i).size(); j++){
                 System.out.print(matrice.get(i).get(j));

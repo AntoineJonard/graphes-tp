@@ -1,6 +1,7 @@
 package com.company.liste;
 
 import com.company.common.Sommet;
+import com.company.matrice.MatriceAdjacence;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -111,6 +112,23 @@ public class ListeAdjacence {
         return listeAdjacence.get(s1).contains(s2Id);
     }
 
+    public MatriceAdjacence toMatrice(){
+        MatriceAdjacence matriceAdjacence = new MatriceAdjacence();
+
+        for(Sommet s : listeAdjacence.keySet()){
+            matriceAdjacence.add_sommet(s);
+        }
+
+        for(Map.Entry<Sommet,List<Integer>> entry : listeAdjacence.entrySet()){
+            Sommet from = entry.getKey();
+            List<Integer> to = entry.getValue();
+            for (Integer id: to)
+                matriceAdjacence.add_arrete(from.getId(),id);
+        }
+
+        return matriceAdjacence;
+    }
+
     public static void main(String[] args) throws IOException {
         ListeAdjacence listeAdjacence = new ListeAdjacence();
 
@@ -126,7 +144,8 @@ public class ListeAdjacence {
         System.out.println("1 et 2 sont voisins ? "+listeAdjacence.isVoisin(s1.getId(), s2.getId()));
 
         ListeAdjacence listeAdjacenceFromFile = new ListeAdjacence("graphe.txt");
-        listeAdjacenceFromFile.save("graphe2.txt");
+        MatriceAdjacence ma = listeAdjacenceFromFile.toMatrice();
+        System.out.println(ma);
 
     }
 }
