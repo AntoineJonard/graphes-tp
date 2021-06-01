@@ -154,7 +154,7 @@ public class ListeAdjacence {
 
         for(Map.Entry<Sommet,List<Integer>> entry1 : listeAdjacence.entrySet()){
             for(Map.Entry<Sommet,List<Integer>> entry2 : g2.listeAdjacence.entrySet()){
-                if (entry1.getKey().sameName(entry1.getKey())){
+                if (entry1.getKey().sameName(entry2.getKey())){
                     Set<String> sommets1 = entry1.getValue().stream().map(sommetId->getSommetById(sommetId).getName()).collect(Collectors.toSet());
                     Set<String> sommets2 = entry2.getValue().stream().map(sommetId->g2.getSommetById(sommetId).getName()).collect(Collectors.toSet());
                     if (!sommets2.containsAll(sommets1)) return false;
@@ -166,45 +166,41 @@ public class ListeAdjacence {
     }
 
     public boolean estPartielDe(ListeAdjacence g2){
-        return sommetsInclusDans(g2,false) && arretesInclusesDans(g2);
+        return sommetsInclusDans(g2,false) && arretesInclusesDans(g2) && getNbSommet()==g2.getNbSommet();
     }
 
     public boolean estSousGrapheDe(ListeAdjacence g2){
         return sommetsInclusDans(g2,true) && arretesInclusesDans(g2);
     }
 
-    public boolean estSousGraphePartielDe(ListeAdjacence g2){
-        Set<Sommet> mySommets = listeAdjacence.keySet();
-        Set<Sommet> otherSommets = g2.listeAdjacence.keySet();
-        Set<String> mySommetsNames = mySommets.stream().map(Sommet::getName).collect(Collectors.toSet());
-        Set<String> othersSommetsNames = otherSommets.stream().map(Sommet::getName).collect(Collectors.toSet());
-        return arretesInclusesDans(g2) && othersSommetsNames.containsAll(mySommetsNames) && mySommetsNames.containsAll(othersSommetsNames);
-    }
-
-    public boolean estCliqueDe(ListeAdjacence g2){
-        if (!estSousGrapheDe(g2))
-            return false;
-
+    public int getNBArretes(){
         int nbArrete = 0;
-        int nbSommets = listeAdjacence.size();
         for(Map.Entry<Sommet,List<Integer>> entry : listeAdjacence.entrySet()){
             nbArrete += entry.getValue().size();
         }
-        nbArrete /= 2;
+        return nbArrete / 2;
+    }
 
-        return (nbSommets*(nbSommets-1))/2 == nbArrete;
+    public int getNbSommet(){
+        return listeAdjacence.size();
+    }
+
+
+    public boolean estSousGraphePartielDe(ListeAdjacence g2){
+        return sommetsInclusDans(g2,true) && arretesInclusesDans(g2) && getNBArretes() + 2 <= g2.getNBArretes();
+    }
+
+    public boolean estCliqueDe(ListeAdjacence g2){
+        if (!sommetsInclusDans(g2,true) )
+            return false;
+
+        int nbSommets = listeAdjacence.size();
+
+        return (nbSommets*(nbSommets-1))/2 == getNBArretes();
     }
 
     public boolean estStableDe(ListeAdjacence g2){
-        if (!sommetsInclusDans(g2,false))
-            return false;
-
-        for(Map.Entry<Sommet,List<Integer>> entry : g2.listeAdjacence.entrySet()){
-            for (Integer id : entry.getValue())
-                if (isVoisin(entry.getKey().getId(),id))
-                    return false;
-        }
-        return true;
+        return sommetsInclusDans(g2,false) && getNBArretes()==0;
     }
 
 
@@ -227,9 +223,17 @@ public class ListeAdjacence {
 //        MatriceAdjacence ma = listeAdjacenceFromFile.toMatrice();
 //        System.out.println(ma);
 
-        ListeAdjacence listeAdjacence1 = new ListeAdjacence("graphe.txt");
-        ListeAdjacence listeAdjacence2 = new ListeAdjacence("graphe.txt");
-        System.out.println(listeAdjacence2.sommetsInclusDans(listeAdjacence1,false));
+        ListeAdjacence base = new ListeAdjacence("graphe_base.txt");
+        ListeAdjacence clique = new ListeAdjacence("graphe_clique_base.txt");
+        ListeAdjacence stable = new ListeAdjacence("graphe_stable_base.txt");
+        ListeAdjacence partiel = new ListeAdjacence("graphe_partiel_base.txt");
+        ListeAdjacence sous = new ListeAdjacence("graphe_sous_base.txt");
+        ListeAdjacence souspartiel = new ListeAdjacence("graphe_sous_partiel_base.txt");
+        System.out.println("Clique : "+clique.estCliqueDe(base));
+        System.out.println("Stable : "+stable.estStableDe(base));
+        System.out.println("Partiel : "+partiel.estPartielDe(base));
+        System.out.println("Sous graphe : "+sous.estSousGrapheDe(base));
+        System.out.println("Sous graphe partiel : "+souspartiel.estSousGraphePartielDe(base));
 
     }
 }
