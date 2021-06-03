@@ -1,5 +1,6 @@
 package com.company.liste;
 
+import com.company.common.MinDistance;
 import com.company.common.Sommet;
 import com.company.common.SommetNamed;
 import com.company.matrice.MatriceAdjacence;
@@ -201,6 +202,15 @@ public class ListeAdjacence {
 
     public boolean estStableDe(ListeAdjacence g2){
         return sommetsInclusDans(g2,false) && getNBArretes()==0;
+    }
+
+    public Map<Sommet, MinDistance> computeMinDistances(){
+        Map<Sommet, MinDistance> minDistances = new HashMap<>();
+        for (Sommet s : listeAdjacence.keySet())
+            minDistances.put(s,new MinDistance(s));
+
+
+        return minDistances;
     }
 
 
