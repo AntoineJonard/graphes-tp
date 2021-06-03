@@ -185,7 +185,7 @@ public class MatriceAdjacence {
     }
     /** Sommet strictement inclus, arretes incluses */
     public boolean est_Partiel_De(MatriceAdjacence G2){
-        return this.arretes_Incluses_Dans(G2) && sommets_Inclus_Dans(G2, false);
+        return arretes_Incluses_Dans(G2) && sommets_Inclus_Dans(G2, false);
     }
     /** Arretes et sommets strictement inclus */
     public boolean est_Sous_Graphe_De(MatriceAdjacence G2){
@@ -197,15 +197,15 @@ public class MatriceAdjacence {
 
     }*/
 
-    /** On verifie que G2 est bien un sous graphe de G, et que G2 est complet*/
+    /** On verifie que G est bien un sous graphe de G2, et que G est complet*/
     public boolean est_Clique_De(MatriceAdjacence G2){
-        int nbSommets = G2.sommetsList.size();
-        return (nbSommets*(nbSommets-1))/2 == G2.nombre_Arretes() && G2.est_Sous_Graphe_De(this);
+        int nbSommets = sommetsList.size();
+        return (nbSommets*(nbSommets-1))/2 == this.nombre_Arretes() && sommets_Inclus_Dans(G2, true);
     }
 
-    /** On verifie que G2 est bien un sous graphe de G, et que G2 n'a pas d'arretes */
+    /** On verifie que G est bien un sous graphe de G2, et que G n'a pas d'arretes */
     public boolean est_Stable_De(MatriceAdjacence G2){
-        return G2.nombre_Arretes() == 0 && G2.est_Sous_Graphe_De(this);
+        return nombre_Arretes() == 0 && sommets_Inclus_Dans(G2, false);
     }
 
     public void afficher() {
@@ -218,9 +218,15 @@ public class MatriceAdjacence {
     }
 
     public static void main(String[] args) throws IOException {
-        MatriceAdjacence m = new MatriceAdjacence("graphe.txt");
-        MatriceAdjacence G = new MatriceAdjacence("graphe2.txt");
-        System.out.println(m.arretes_Incluses_Dans(G));
+        MatriceAdjacence base = new MatriceAdjacence("graphe_base.txt");
+        MatriceAdjacence G = new MatriceAdjacence("graphe_clique_base.txt");
+        MatriceAdjacence G1 = new MatriceAdjacence("graphe_partiel_base.txt");
+        MatriceAdjacence G2 = new MatriceAdjacence("graphe_sous_base.txt");
+        MatriceAdjacence G3 = new MatriceAdjacence("graphe_stable_base.txt");
+        //System.out.println(G.est_Clique_De(base));
+        //System.out.println(G2.est_Sous_Graphe_De(base));
+        //System.out.println(G1.est_Partiel_De(base));
+        //System.out.println(G3.est_Stable_De(base));
         //m.afficher();
 
 
