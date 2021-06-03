@@ -1,7 +1,9 @@
 package com.company.common;
 
 import java.util.HashMap;
-
+/**
+ * Base de données répetoriant les distances minimum de chaque sommet,
+ * */
 public class MinDistance {
 
     private Sommet from;

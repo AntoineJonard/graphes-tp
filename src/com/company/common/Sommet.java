@@ -55,10 +55,6 @@ public class Sommet {
         return this.getName().equals(s.getName());
     }
 
-    public SommetNamed toSommetNamed(){
-        return new SommetNamed(getId(),getName());
-    }
-
     @Override
     public String toString() {
         return "id = "+id;

@@ -2,7 +2,6 @@ package com.company.liste;
 
 import com.company.common.MinDistance;
 import com.company.common.Sommet;
-import com.company.common.SommetNamed;
 import com.company.matrice.MatriceAdjacence;
 
 import java.io.*;

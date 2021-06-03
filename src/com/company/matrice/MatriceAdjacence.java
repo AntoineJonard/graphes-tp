@@ -1,14 +1,14 @@
 package com.company.matrice;
 
+import com.company.common.MinDistance;
 import com.company.common.Sommet;
 import com.company.liste.ListeAdjacence;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MatriceAdjacence {
@@ -41,6 +41,31 @@ public class MatriceAdjacence {
             String[] arrete = line.split("\\s+");
             add_arrete(Integer.parseInt(arrete[0]),Integer.parseInt(arrete[1]));
         }
+    }
+    /** Enregister un graphe */
+    public void save(String fileName) throws IOException {
+        File file = new File("src/data/"+fileName);
+        if (file.createNewFile()) System.out.println("Ficher créer");
+        else System.out.println("Fichier deja existant, écrasement...");
+
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+        bufferedWriter.write(sommetsList.size()+"\n");
+
+        for (Sommet s : sommetsList){
+            bufferedWriter.write(s.getId()+" "+s.getName()+"\n");
+        }
+
+        for (int i = 1 ; i < matrice.size(); i++){
+            for (int j = 0; j < matrice.size(); j++){
+                int sommetA = sommetsList.get(i).getId();
+                int sommetB = sommetsList.get(j).getId();
+                bufferedWriter.write(sommetA + " " + sommetB + "\n");
+            }
+        }
+
+        bufferedWriter.close();
+
+        System.out.println("Fichier correctement sauvegardé");
     }
 
     /** Initialise le graphe */
@@ -125,6 +150,8 @@ public class MatriceAdjacence {
         return listeAdjacence;
     }
 
+    //Exercice 2
+
     /** Renvoie true si les sommets du graphe actuel sont inclus dans le graphe passe en parametres, faux sinon*/
     public boolean sommets_Inclus_Dans(MatriceAdjacence G, boolean strict){
         /* On recupere les noms des sommets actuels*/
@@ -192,10 +219,9 @@ public class MatriceAdjacence {
         return this.arretes_Incluses_Dans(G2) && this.sommets_Inclus_Dans(G2, true);
     }
 
-    /** */
-    /*public est_Sous_Graphe_Partiel(MatriceAdjacence G2){
-
-    }*/
+    public boolean est_Sous_Graphe_Partiel(MatriceAdjacence G2){
+        return sommets_Inclus_Dans(G2,true) && arretes_Incluses_Dans(G2) && nombre_Arretes() + 2 <= G2.nombre_Arretes();
+    }
 
     /** On verifie que G est bien un sous graphe de G2, et que G est complet*/
     public boolean est_Clique_De(MatriceAdjacence G2){
@@ -208,6 +234,11 @@ public class MatriceAdjacence {
         return nombre_Arretes() == 0 && sommets_Inclus_Dans(G2, false);
     }
 
+    //Exercice 3
+    public void min_Distance(){
+
+    }
+
     public void afficher() {
         for (int i = 1; i < matrice.size(); i++) {
             for (int j = 0; j < matrice.get(i).size(); j++) {
@@ -218,7 +249,7 @@ public class MatriceAdjacence {
     }
 
     public static void main(String[] args) throws IOException {
-        MatriceAdjacence base = new MatriceAdjacence("graphe_base.txt");
+        MatriceAdjacence base = new MatriceAdjacence();
         MatriceAdjacence G = new MatriceAdjacence("graphe_clique_base.txt");
         MatriceAdjacence G1 = new MatriceAdjacence("graphe_partiel_base.txt");
         MatriceAdjacence G2 = new MatriceAdjacence("graphe_sous_base.txt");
@@ -227,6 +258,17 @@ public class MatriceAdjacence {
         //System.out.println(G2.est_Sous_Graphe_De(base));
         //System.out.println(G1.est_Partiel_De(base));
         //System.out.println(G3.est_Stable_De(base));
+        Sommet s1 = new Sommet("s1");
+        Sommet s2 = new Sommet("s2");
+        Sommet s3 = new Sommet("s3");
+
+        base.add_sommet(s1);
+        base.add_sommet(s3);
+        base.add_sommet(s2);
+
+        base.add_arrete(s1, s2);
+        base.save("testdqdqsdqdsqsd.txt");
+
         //m.afficher();
 
 
