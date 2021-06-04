@@ -15,11 +15,19 @@ public class MinDistance {
     }
 
     public boolean updateMinDistance(Sommet to, int distance){
-        if (distances.get(to) > distance){
+        if (distances.get(to) == null || (distances.get(to) != null && distances.get(to) > distance)){
             distances.put(to, distance);
             return true;
         }
         return false;
+    }
+
+    public boolean better(Sommet to, int distance){
+        return distances.get(to) == null || (distances.get(to) != null && distances.get(to) > distance);
+    }
+
+    public boolean isInit(Sommet to){
+        return distances.get(to) != null ;
     }
 
     public int getMinDistance(Sommet to){

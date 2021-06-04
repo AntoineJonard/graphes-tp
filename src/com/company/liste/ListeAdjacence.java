@@ -205,9 +205,35 @@ public class ListeAdjacence {
 
     public Map<Sommet, MinDistance> computeMinDistances(){
         Map<Sommet, MinDistance> minDistances = new HashMap<>();
+
+        List<Sommet> treated;
+
         for (Sommet s : listeAdjacence.keySet())
             minDistances.put(s,new MinDistance(s));
 
+        for (Sommet s : listeAdjacence.keySet()){
+            treated = new ArrayList<>();
+            Queue<Sommet> parcours = new PriorityQueue<>(Comparator.comparingInt(o -> minDistances.get(s).getMinDistance(o)));
+            parcours.add(s);
+            treated.add(s);
+            minDistances.get(s).updateMinDistance(s,0);
+            while(!parcours.isEmpty()){
+                Sommet current = parcours.poll();
+
+                for (Integer suivantId : listeAdjacence.get(current)){
+                    Sommet suivant = getSommetById(suivantId);
+
+                    int distance = minDistances.get(s).getMinDistance(current)+1;
+
+                    if (minDistances.get(s).better(suivant, distance) && !treated.contains(suivant)){
+                        parcours.remove(suivant);
+                        minDistances.get(s).updateMinDistance(suivant, distance);
+                        parcours.offer(suivant);
+                        treated.add(suivant);
+                    }
+                }
+            }
+        }
 
         return minDistances;
     }
@@ -232,17 +258,20 @@ public class ListeAdjacence {
 //        MatriceAdjacence ma = listeAdjacenceFromFile.toMatrice();
 //        System.out.println(ma);
 
+//        ListeAdjacence base = new ListeAdjacence("graphe_base.txt");
+//        ListeAdjacence clique = new ListeAdjacence("graphe_clique_base.txt");
+//        ListeAdjacence stable = new ListeAdjacence("graphe_stable_base.txt");
+//        ListeAdjacence partiel = new ListeAdjacence("graphe_partiel_base.txt");
+//        ListeAdjacence sous = new ListeAdjacence("graphe_sous_base.txt");
+//        ListeAdjacence souspartiel = new ListeAdjacence("graphe_sous_partiel_base.txt");
+//        System.out.println("Clique : "+clique.estCliqueDe(base));
+//        System.out.println("Stable : "+stable.estStableDe(base));
+//        System.out.println("Partiel : "+partiel.estPartielDe(base));
+//        System.out.println("Sous graphe : "+sous.estSousGrapheDe(base));
+//        System.out.println("Sous graphe partiel : "+souspartiel.estSousGraphePartielDe(base));
+
         ListeAdjacence base = new ListeAdjacence("graphe_base.txt");
-        ListeAdjacence clique = new ListeAdjacence("graphe_clique_base.txt");
-        ListeAdjacence stable = new ListeAdjacence("graphe_stable_base.txt");
-        ListeAdjacence partiel = new ListeAdjacence("graphe_partiel_base.txt");
-        ListeAdjacence sous = new ListeAdjacence("graphe_sous_base.txt");
-        ListeAdjacence souspartiel = new ListeAdjacence("graphe_sous_partiel_base.txt");
-        System.out.println("Clique : "+clique.estCliqueDe(base));
-        System.out.println("Stable : "+stable.estStableDe(base));
-        System.out.println("Partiel : "+partiel.estPartielDe(base));
-        System.out.println("Sous graphe : "+sous.estSousGrapheDe(base));
-        System.out.println("Sous graphe partiel : "+souspartiel.estSousGraphePartielDe(base));
+        base.computeMinDistances();
 
     }
 }
