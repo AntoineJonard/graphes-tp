@@ -239,7 +239,7 @@ public class ListeAdjacence {
         return sommetsInclusDans(g2,false) && getNBArretes()==0;
     }
 
-    /** Parcous en largueur pour calculer les distances min de tous les sommets à tous les sommets **/
+    /** Parcours en largueur pour calculer les distances min de tous les sommets à tous les sommets **/
     public Collection<MinDistance> computeMinDistances(){
 
         // Liste des sommets et des distances à tous les autres
@@ -255,7 +255,7 @@ public class ListeAdjacence {
         for (Sommet s : listeAdjacence.keySet()){
             treated = new ArrayList<>();
             // File des sommets a traité dans le parcours
-            // On trie dans la file en fonction des distance pour assurer une répidité de calcul
+            // On trie dans la file en fonction des distance pour assurer une rapidité de calcul
             Queue<Sommet> parcours = new PriorityQueue<>(Comparator.comparingInt(o -> minDistances.get(s).getMinDistance(o)));
             // initialisation de la file avec le sommet de départ
             parcours.add(s);
@@ -263,9 +263,9 @@ public class ListeAdjacence {
             minDistances.get(s).updateMinDistance(s,0);
             // Tant qu'il y a des sommets à traités
             while(!parcours.isEmpty()){
-                Sommet current = parcours.poll();
+                Sommet current = parcours.poll(); //On recupere la tete de liste
 
-                // On determine la distance min des suivants la tete de file en fonction de la distance min de la tete de file
+                // On determine la distance min des suivants de la tete de file en fonction de la distance min de la tete de file
                 for (Integer suivantId : listeAdjacence.get(current)){
                     Sommet suivant = getSommetById(suivantId);
 
