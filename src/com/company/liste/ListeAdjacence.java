@@ -3,6 +3,7 @@ package com.company.liste;
 import com.company.common.InfoCentre;
 import com.company.common.MinDistance;
 import com.company.common.Sommet;
+import com.company.common.SommetDegre;
 import com.company.matrice.MatriceAdjacence;
 
 import java.io.*;
@@ -326,10 +327,9 @@ public class ListeAdjacence {
         return new InfoCentre(rayon, centres);
     }
 
-    public HashMap<Sommet, Integer> computeDegres(){
+    public List<SommetDegre> computeDegres(){
         HashMap<Sommet, Integer> degres = new HashMap<>();
-        return null;
-        //return listeAdjacence.entrySet().stream().map(sommetListEntry -> new Map.Entry(sommetListEntry.getKey(),sommetListEntry.getValue().size())).collect(Collectors.toList());
+        return listeAdjacence.entrySet().stream().map(sommetListEntry -> new SommetDegre(sommetListEntry.getKey(),sommetListEntry.getValue().size())).collect(Collectors.toList());
     }
 
     public static void main(String[] args) throws IOException {
