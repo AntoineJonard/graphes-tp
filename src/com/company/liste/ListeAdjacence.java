@@ -284,6 +284,10 @@ public class ListeAdjacence {
         return minDistances.values();
     }
 
+    /**
+     * Calcul le diametre du graphe courant à l'aide de l'objet minDistance
+     * @return le Diametre du graphe courant
+     */
     public int computeDiametre(){
         // Distance maximale qui sera mise a jour
         int maxDistance = 0;
@@ -301,6 +305,10 @@ public class ListeAdjacence {
         return maxDistance;
     }
 
+    /**
+     * Calcul le centre d'un graphe selon son excentricité
+     * @return Un objet contenant toutes les informations du centre (les sommets, l'excentricité, le nombre de sommet)
+     */
     public InfoCentre computeCentre(){
         // On initialise le rayon au maximum
         int rayon = Integer.MAX_VALUE;
@@ -327,10 +335,44 @@ public class ListeAdjacence {
         return new InfoCentre(rayon, centres);
     }
 
+    /**
+     * Calcul le degré de tous les sommets du graphe
+     * @return La liste des sommets auquel on a associé un degré
+     */
     public List<SommetDegre> computeDegres(){
         HashMap<Sommet, Integer> degres = new HashMap<>();
+        // Map chaque entrée vers un objet contenant le sommet et et la taille de la liste des sommets auquels il est lié
         return listeAdjacence.entrySet().stream().map(sommetListEntry -> new SommetDegre(sommetListEntry.getKey(),sommetListEntry.getValue().size())).collect(Collectors.toList());
     }
+
+    /**
+     * Calcul le centre d'un graphe selon son degré
+     */
+    public InfoCentre computeCentreDegres(){
+        // On initialise le rayon au maximum
+        int rayon = Integer.MAX_VALUE;
+        List<Sommet> centres = new ArrayList<>();
+
+        // Tout les sommets et leurs degrés
+        List<SommetDegre> sommetDegres = computeDegres();
+
+        for (SommetDegre sommetDegre : sommetDegres){
+            // Si le degré est la meme alors on ajoute a la liste des sommets du centre
+            if (sommetDegre.getDegre() == rayon){
+                centres.add(sommetDegre.getSommet());
+            }
+            // Si le degré est plus petit alors on met a jout la liste des centres et le nouveau degré minimum
+            if (sommetDegre.getDegre() < rayon){
+                centres.clear();
+                rayon = sommetDegre.getDegre();
+                centres.add(sommetDegre.getSommet());
+            }
+        }
+
+        return new InfoCentre(rayon, centres);
+    }
+
+
 
     public static void main(String[] args) throws IOException {
 //        ListeAdjacence listeAdjacence = new ListeAdjacence();
@@ -366,6 +408,7 @@ public class ListeAdjacence {
         base.computeMinDistances();
         System.out.println(base.computeDiametre());
         System.out.println(base.computeCentre());
+        System.out.println(base.computeCentreDegres());
 
     }
 }

@@ -2,6 +2,9 @@ package com.company.common;
 
 import java.util.List;
 
+/**
+ * Classe qui stocke les infos nécessaires sur un centre
+ */
 public class InfoCentre {
 
     private int rayon;

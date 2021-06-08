@@ -2,10 +2,16 @@ package com.company.common;
 
 import java.util.Objects;
 
+/**
+ * Objet contenant les informations d'un sommet
+ */
 public class Sommet {
 
     private int id;
     private String name;
+    /**
+     * Utilisé pour générer des ids automatiquement si on fait le graphe a la main
+     */
     private static int CPT_ID = 0;
 
     public Sommet(String name) {

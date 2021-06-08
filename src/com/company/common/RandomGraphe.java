@@ -7,8 +7,8 @@ import java.io.IOException;
 
 /** Génère un graphe aleatoireemnt avec une densité proba et un nombre de Sommets nombreSommets*/
 public class RandomGraphe {
-    private double proba;
-    private long nombreSommets;
+    private final double proba;
+    private final long nombreSommets;
 
     public RandomGraphe(double proba, long n, String fileName) throws IOException {
         this.nombreSommets = n;
