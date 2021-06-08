@@ -57,6 +57,6 @@ public class Sommet {
 
     @Override
     public String toString() {
-        return "id = "+id;
+        return "\nSommet "+getName()+" d'id "+id;
     }
 }

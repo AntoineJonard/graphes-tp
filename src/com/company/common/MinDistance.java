@@ -1,6 +1,9 @@
 package com.company.common;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Optional;
+
 /**
  * Base de données répetoriant les distances minimum de chaque sommet,
  * */
@@ -14,12 +17,10 @@ public class MinDistance {
         this.distances = new HashMap<>();
     }
 
-    public boolean updateMinDistance(Sommet to, int distance){
+    public void updateMinDistance(Sommet to, int distance){
         if (distances.get(to) == null || (distances.get(to) != null && distances.get(to) > distance)){
             distances.put(to, distance);
-            return true;
         }
-        return false;
     }
 
     public boolean better(Sommet to, int distance){
@@ -32,5 +33,14 @@ public class MinDistance {
 
     public int getMinDistance(Sommet to){
         return distances.get(to);
+    }
+
+    public  Integer getMaxMinDistance(){
+        Optional<Integer> max = distances.values().stream().max(Comparator.comparingInt(i -> i));
+        return max.orElse(null);
+    }
+
+    public Sommet getFrom() {
+        return from;
     }
 }

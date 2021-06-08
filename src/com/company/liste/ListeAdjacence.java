@@ -1,5 +1,6 @@
 package com.company.liste;
 
+import com.company.common.InfoCentre;
 import com.company.common.MinDistance;
 import com.company.common.Sommet;
 import com.company.matrice.MatriceAdjacence;
@@ -238,7 +239,7 @@ public class ListeAdjacence {
     }
 
     /** Parcous en largueur pour calculer les distances min de tous les sommets à tous les sommets **/
-    public Map<Sommet, MinDistance> computeMinDistances(){
+    public Collection<MinDistance> computeMinDistances(){
 
         // Liste des sommets et des distances à tous les autres
         Map<Sommet, MinDistance> minDistances = new HashMap<>();
@@ -279,10 +280,57 @@ public class ListeAdjacence {
             }
         }
 
-        return minDistances;
+        return minDistances.values();
     }
 
+    public int computeDiametre(){
+        // Distance maximale qui sera mise a jour
+        int maxDistance = 0;
 
+        // Tout les objets contenant les infos de distance minimal d'un sommet avec les autres
+        Collection<MinDistance> minDistances = computeMinDistances();
+
+        for (MinDistance minDistance : minDistances){
+            // On regard la valeur maximale des distances a chaque sommet
+            Integer maxS = minDistance.getMaxMinDistance();
+            // On met a jout si elle est plus grande que la précédente
+            if (maxS != null && maxS > maxDistance)
+                maxDistance = maxS;
+        }
+        return maxDistance;
+    }
+
+    public InfoCentre computeCentre(){
+        // On initialise le rayon au maximum
+        int rayon = Integer.MAX_VALUE;
+        List<Sommet> centres = new ArrayList<>();
+
+        // Tout les objets contenant les infos de distance minimal d'un sommet avec les autres
+        Collection<MinDistance> minDistances = computeMinDistances();
+
+        for (MinDistance minDistance : minDistances){
+            // On regard la valeur maximale des distances a chaque sommet
+            Integer maxS = minDistance.getMaxMinDistance();
+            // Si l'excentricité est la meme alors on ajoute a la liste des sommets du centre
+            if (maxS != null && maxS == rayon){
+                centres.add(minDistance.getFrom());
+            }
+            // Si l'excentricité est plus petite alors on met a jout la liste des centres et la nouvelle excentricité
+            if (maxS != null && maxS < rayon){
+                centres.clear();
+                rayon = maxS;
+                centres.add(minDistance.getFrom());
+            }
+        }
+
+        return new InfoCentre(rayon, centres);
+    }
+
+    public HashMap<Sommet, Integer> computeDegres(){
+        HashMap<Sommet, Integer> degres = new HashMap<>();
+        return null;
+        //return listeAdjacence.entrySet().stream().map(sommetListEntry -> new Map.Entry(sommetListEntry.getKey(),sommetListEntry.getValue().size())).collect(Collectors.toList());
+    }
 
     public static void main(String[] args) throws IOException {
 //        ListeAdjacence listeAdjacence = new ListeAdjacence();
@@ -316,6 +364,8 @@ public class ListeAdjacence {
 
         ListeAdjacence base = new ListeAdjacence("graphe_base.txt");
         base.computeMinDistances();
+        System.out.println(base.computeDiametre());
+        System.out.println(base.computeCentre());
 
     }
 }
